@@ -1,7 +1,6 @@
 import { dirname } from "path";
 import { fileURLToPath } from "url";
 import { FlatCompat } from "@eslint/eslintrc";
-import { plugins } from "eslint-config-standard";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
@@ -20,57 +19,48 @@ const eslintConfig = [
     "prettier"
   ),
 
-  {
-    plugins: ["import"],  
-
-    rules: {
-      "import/order": [
-        "error",
-        {
-          "groups": [
-            "builtin", // Built-in types are first
-            "external", // External libraries
-            "internal", // Internal modules
-            [
-              "parent",
-              "sibling"
-            ], // Parent and sibling types can be mingled together
-            "index", // Then the index file
-            "object" // Object imports
-          ],
-          "newlines-between": "always",
-          "pathGroups": [
-            {
-              "pattern": "@app/**",
-              "group": "external",
-              "position": "after"
-            }
-          ],
-          "pathGroupsExcludedImportTypes": [
-            "builtin"
-          ],
-          "alphabetize": {
-            "order": "asc",
-            "caseInsensitive": true
-          }
-        }
-      ]
-    },
-    ignorePatterns: [
-      "components/ui/**"
-    ],
-    overrides: [
-      {
-        "files": [
-          "*.ts",
-          "*.tsx"
+  ...compat.config(
+    {
+      plugins: ["import"],
+      rules: {
+        "import/order": [
+          "error",
+          {
+            groups: [
+              "builtin", // Built-in types are first
+              "external", // External libraries
+              "internal", // Internal modules
+              ["parent", "sibling"], // Parent and sibling types can be mingled together
+              "index", // Then the index file
+              "object", // Object imports
+            ],
+            "newlines-between": "always",
+            pathGroups: [
+              {
+                pattern: "@app/**",
+                group: "external",
+                position: "after",
+              },
+            ],
+            pathGroupsExcludedImportTypes: ["builtin"],
+            alphabetize: {
+              order: "asc",
+              caseInsensitive: true,
+            },
+          },
         ],
-        "rules": {
-          "no-undef": "off"
-        }
-      }
-    ]
-  }
+      },
+      ignorePatterns: ["components/ui/**"],
+      overrides: [
+        {
+          files: ["*.ts", "*.tsx"],
+          rules: {
+            "no-undef": "off",
+          },
+        },
+      ],
+    }
+  )
 ];
 
 export default eslintConfig;
